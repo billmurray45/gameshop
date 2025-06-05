@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Корзина{% endblock %}
+
+{% block content %}
+<div class="container cart-container">
+  <h1 class="cart-title">Ваша корзина</h1>
+
+  {% if cart_items %}
+    <div class="cart-items">
+      {% for item in cart_items %}
+      <div class="cart-item">
+        <div class="cart-item-image">
+          <img src="{{ item.game.poster or 'https://via.placeholder.com/100x60' }}" alt="{{ item.game.title }}">
+        </div>
+        <div class="cart-item-details">
+          <div class="cart-item-title">{{ item.game.title }}</div>
+          <div class="cart-item-platform">
+            {% if item.game.platform == "PC" %}
+              <i class="fab fa-windows"></i> PC
+            {% elif item.game.platform == "PS4" %}
+              <i class="fab fa-playstation"></i> PlayStation 4
+            {% else %}
+              {{ item.game.platform }}
+            {% endif %}
+          </div>
+        </div>
+        <div class="cart-item-price">{{ item.game.price }} ₽</div>
+        <div class="cart-item-quantity">
+          <form method="post" action="/cart/update">
+            <input type="hidden" name="game_id" value="{{ item.game.id }}">
+
+            <span>{{ item.quantity }}</span>
+
+          </form>
+        </div>
+        <div class="cart-item-remove">
+          <form method="post" action="/cart/remove">
+            <input type="hidden" name="game_id" value="{{ item.game.id }}">
+            <button type="submit" class="remove-btn">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="cart-summary">
+      <div class="summary-row">
+        <span class="summary-label">Товары ({{ cart_items | length }})</span>
+        <span class="summary-value">
+          {{ cart_items | sum(attribute='game.price', start=0) * 1 }} ₽
+        </span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Скидка</span>
+        <span class="summary-value">-0 ₽</span>
+      </div>
+      <div class="summary-total">
+        <span class="summary-label">Итого</span>
+        <span class="summary-value">
+          {{ cart_items | sum(attribute='game.price', start=0) * 1 }} ₽
+        </span>
+      </div>
+      <form method="post" action="/checkout">
+        <button type="submit" class="checkout-btn">
+          <i class="fas fa-credit-card"></i> Оформить заказ
+        </button>
+      </form>
+      <form method="post" action="/cart/clear" style="margin-top: 15px;">
+        <button type="submit" class="checkout-btn">Очистить корзину</button>
+      </form>
+    </div>
+  {% else %}
+    <p class="empty-cart-message">Ваша корзина пуста.</p>
+    <a href="/" class="back-to-games">← Вернуться к играм</a>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Профиль {{ user.username }}  - GameShop{% endblock %}
+
+{% block content %}
+<main>
+<div class="container">
+<div class="profile-container">
+<aside class="profile-sidebar">
+<div class="profile-avatar"><img src="https://i2.wp.com/vdostavka.ru/wp-content/uploads/2019/05/no-avatar.png" alt="Аватар пользователя"></div>
+<h2 class="profile-name">{{ user.full_name }}</h2>
+<p class="profile-email">{{ user.email }}</p>
+<div class="profile-stats">
+<div class="stat-item"><div class="stat-value">24</div><div class="stat-label">Игры</div></div>
+<div class="stat-item"><div class="stat-value">12</div><div class="stat-label">Отзывы</div></div>
+</div>
+<nav class="profile-menu">
+<a href="#" class="active"><i class="fas fa-user"></i> Профиль</a>
+<a href="#"><i class="fas fa-shopping-bag"></i> Покупки</a>
+<a href="#"><i class="fas fa-heart"></i> Избранное</a>
+<a href="#"><i class="fas fa-cog"></i> Настройки</a>
+<a href="#"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+</nav>
+</aside>
+
+<!-- Основное содержимое профиля -->
+<div class="profile-content">
+<section class="profile-section">
+<h2>Личная информация</h2>
+<div class="profile-info-item"><div class="profile-info-label">Имя пользователя:</div><div class="profile-info-value">{{ user.username }}</div></div>
+<div class="profile-info-item"><div class="profile-info-label">Полное имя:</div><div class="profile-info-value">{{ user.full_name }}</div></div>
+<div class="profile-info-item"><div class="profile-info-label">Email:</div><div class="profile-info-value">{{ user.email }}</div></div>
+<div class="profile-info-item"><div class="profile-info-label">Дата регистрации:</div><div class="profile-info-value">{{ user.created_at.strftime('%d.%m.%Y') }}</div></div>
+{% if user %}<a class="edit-btn" href="/profile/edit">Редактировать профиль</a>{% endif %}
+</section>
+
+<section class="profile-section">
+<h2>Последние публикации</h2>
+<div class="purchases-list">
+{% if user_games %}
+{% for game in user_games %}
+<div class="purchase-item">
+<div class="purchase-image"><img src="{{ game.poster }}" alt="{{ game.title }}"></div>
+<div class="purchase-details">
+<div class="purchase-title">{{ game.title }}</div>
+<div class="purchase-date">Куплено: 15.12.2023</div>
+</div>
+<div class="purchase-price">{{ game.price }} ₽</div>
+</div>
+{% endfor %}
+{% endif %}
+</div>
+</section>
+</div>
+</div>
+</div>
+</main>
+
+
+<script>
+        // Скрипты для страницы профиля
+        document.addEventListener("DOMContentLoaded", () => {
+            // Активация пунктов меню
+            const menuItems = document.querySelectorAll('.profile-menu a');
+            menuItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+
+                    // Здесь можно добавить логику загрузки соответствующего раздела
+                });
+            });
+
+            // Остальные скрипты (если есть)
+        });
+    </script>
+{% endblock %}

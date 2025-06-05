@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Главная - GameShop{% endblock %}
+
+{% block content %}
+<main>
+  <div class="container" style="display: flex; gap: 20px; align-items: flex-start;">
+    <aside>
+      <form class="dle-filter" data-dlefilter="dle-filter" method="get" action="/games">
+          <div>
+              <span>Стоимость (₽)</span>
+              <input name="price_min" type="number" min="300" max="15000" step="100" placeholder="Мин">
+              <input name="price_max" type="number" min="300" max="15000" step="100" placeholder="Макс">
+          </div>
+
+          <div>
+              <span>Год выпуска</span>
+              <input name="year_min" placeholder="От" type="number" min="2000" max="2100">
+              <input name="year_max" placeholder="До" type="number" min="2000" max="2100">
+          </div>
+
+          <div>
+              <input type="submit" value="Показать">
+          </div>
+      </form>
+    </aside>
+
+    <section class="game-section" style="flex: 1;">
+      <div class="section-header"><h2>Новые игры</h2></div>
+      <div class="game-carousel">
+        <div class="game-carousel-container">
+          <div class="game-grid">
+            {% for game in games %}
+            <a href="/games/{{ game.id }}">
+              <div class="game-card">
+                <img src="{{ game.poster }}" alt="{{ game.title }}<">
+                <h3>{{ game.title }}</h3>
+                <p class="price">{{ game.price }} ₽</p>
+                <button class="buy-button"><i class="fas fa-shopping-cart"></i></button>
+              </div>
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+{% endblock %}

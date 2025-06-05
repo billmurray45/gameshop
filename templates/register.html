@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация на сайте - GameShop{% endblock %}
+
+{% block content %}
+<main>
+<div class="container">
+<div class="register-container">
+<h2 class="register-title">Создать аккаунт</h2>
+<form action="/register" method="post" id="registerForm">
+<div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" required><div class="error-message" id="email-error"></div></div>
+<div class="form-group"><label for="username">Имя пользователя</label><input type="text" id="username" name="username" required minlength="3"><div class="error-message" id="username-error"></div></div>
+<div class="form-group"><label for="password">Пароль</label><input type="password" id="password" name="password" required minlength="8"><div class="password-hint">Минимум 8 символов</div><div class="error-message" id="password-error"></div></div>
+<div class="form-group"><label for="full_name">Полное имя</label><input type="text" id="full_name" name="full_name" required><div class="error-message" id="name-error"></div></div>
+<button type="submit" class="submit-btn">Зарегистрироваться</button>
+</form>
+<div class="login-link">Уже есть аккаунт? <a href="/login">Войти</a></div>
+</div>
+</div>
+</main>
+
+<script>
+        // Валидация формы регистрации
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            let isValid = true;
+
+            // Очищаем предыдущие ошибки
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+                el.textContent = '';
+            });
+
+            // Проверка email
+            const email = document.getElementById('email').value;
+            if (!email.includes('@') || !email.includes('.')) {
+                document.getElementById('email-error').textContent = 'Введите корректный email';
+                document.getElementById('email-error').style.display = 'block';
+                isValid = false;
+            }
+
+            // Проверка имени пользователя
+            const username = document.getElementById('username').value;
+            if (username.length < 3) {
+                document.getElementById('username-error').textContent = 'Имя пользователя должно содержать минимум 3 символа';
+                document.getElementById('username-error').style.display = 'block';
+                isValid = false;
+            }
+
+            // Проверка пароля
+            const password = document.getElementById('password').value;
+            if (password.length < 8) {
+                document.getElementById('password-error').textContent = 'Пароль должен содержать минимум 8 символов';
+                document.getElementById('password-error').style.display = 'block';
+                isValid = false;
+            }
+
+            // Проверка полного имени
+            const fullName = document.getElementById('full_name').value;
+            if (fullName.trim() === '') {
+                document.getElementById('name-error').textContent = 'Введите ваше полное имя';
+                document.getElementById('name-error').style.display = 'block';
+                isValid = false;
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+
+        // Остальные скрипты (если есть)
+        document.addEventListener("DOMContentLoaded", () => {
+            // Ваш существующий код...
+        });
+</script>
+{% endblock %}

@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}Главная - GameShop{% endblock %}
+
+{% block content %}
+<section class="featured-carousel">
+<div class="container">
+<div class="carousel-container">
+<button class="carousel-arrow prev"><i class="fas fa-chevron-left"></i></button>
+<div class="carousel-slides">
+<div class="carousel-slide active">
+<img src="https://www.gamespot.com/a/uploads/original/1179/11799911/3882090-forzahorizon5_keyart_primary_extended-horiz_rgb_final.jpg" alt="Forza Horizon 4">
+<div class="game-info">
+<h2>Forza Horizon 4</h2>
+<div class="platforms">
+<span>Платформы:</span>
+<span class="platform">PC</span>
+<span class="platform">PlayStation</span>
+</div>
+</div>
+</div>
+<div class="carousel-slide">
+<img src="https://sonyinteractive.com/tachyon/2023/10/Marvels-Spider-Man-2_Key-Art.png?fit=1024%2C1024" alt="Train Sim World 4">
+<div class="game-info">
+<h2>Train Sim World 4</h2>
+<div class="platforms">
+<span>Платформы:</span>
+<span class="platform">PC</span>
+<span class="platform">PlayStation</span>
+</div>
+</div>
+</div>
+<div class="carousel-slide">
+<img src="https://www.ixbt.com/img/n1/news/2024/11/5/0b68ebf352db559cb45a75bd32fed338_large.jpg " alt="Cities: Skylines">
+<div class="game-info">
+<h2>Cities: Skylines</h2>
+<div class="platforms">
+<span>Платформы:</span>
+<span class="platform">PC</span>
+<span class="platform">PlayStation</span>
+<span class="platform">Xbox</span>
+</div>
+</div>
+</div>
+</div>
+<button class="carousel-arrow next"><i class="fas fa-chevron-right"></i></button>
+</div>
+</div>
+</section>
+
+<section class="game-section">
+<div class="container">
+<div class="section-header"><h2>В тренде</h2><a href="#" class="view-all">Смотреть все <i class="fas fa-chevron-right"></i></a></div>
+<div class="game-carousel">
+<div class="game-grid">
+{% for game in games %}
+<a href="/games/{{ game.id }}">
+<div class="game-card">
+<img src="{{ game.poster }}" alt="{{ game.title }}<">
+<h3>{{ game.title }}</h3>
+<p class="price">{{ game.price }} ₽</p>
+<button class="buy-button"><i class="fas fa-shopping-cart"></i></button>
+</div>
+</a>
+{% endfor %}
+</div>
+</div>
+</div>
+</section>
+
+<section class="game-section">
+<div class="container">
+<div class="section-header"><h2>Новые игры</h2><a href="#" class="view-all">Смотреть все <i class="fas fa-chevron-right"></i></a></div>
+<div class="game-carousel">
+<div class="game-carousel-container">
+<div class="game-grid">
+{% for game in games %}
+<a href="/games/{{ game.id }}">
+<div class="game-card">
+<img src="{{ game.poster }}" alt="{{ game.title }}<">
+<h3>{{ game.title }}</h3>
+<p class="price">{{ game.price }} ₽</p>
+<button class="buy-button"><i class="fas fa-shopping-cart"></i></button>
+</div>
+</a>
+{% endfor %}
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="benefits-section">
+<div class="container">
+<div class="benefits-grid">
+<div class="benefit-card">
+<div class="benefit-icon"><img src="https://static.vecteezy.com/system/resources/previews/009/373/591/original/business-icon-rocket-3d-illustration-png.png" alt="Rocket"></div>
+<h3>Моментальная доставка</h3><p>Ключи для сотен товаров будут у вас на почте сразу после покупки</p>
+</div>
+<div class="benefit-card">
+<div class="benefit-icon"><img src="https://cdn-icons-png.flaticon.com/512/10473/10473619.png" alt="Discount"></div>
+<h3>Кэшбэк до 20%</h3><p>Накапливается с каждой покупки в магазине</p>
+</div>
+<div class="benefit-card">
+<div class="benefit-icon"><img src="https://cdn3d.iconscout.com/3d/premium/thumb/security-shield-8216486-6578410.png" alt="Secure"></div>
+<h3>Безопасная оплата</h3><p>А так же без комиссии дополнительных платежей при оплате</p>
+</div>
+</div>
+</div>
+</section>
+
+<section class="about-section">
+<div class="container">
+<div class="about-content">
+<h2>Выгодные покупки в интернет магазине - <span>DOLOR</span></h2>
+<p>В нашем интернет-магазине вы сможете приобрести лицензионные ключи к играм от Steam, Uplay, Battle.net и прочих популярных игровых платформ. Наш магазин делает все для того, чтобы ваши покупки проходили быстро, с максимальным удобством и безопасностью, а цены оставались максимально доступными.</p>
+<p>Для покупки достаточно лишь указать электронный адрес при оформлении заказа и выбрать удобный способ оплаты. После этого Вам на почту придет письмо доступа в личный кабинет, в котором Вы получите ключ активации.</p>
+</div>
+</div>
+</section>
+
+<div class="auth-modal" id="auth-modal">
+    <div class="auth-modal-content">
+        <span class="auth-close-button">&times;</span>
+        {% if user %}
+            <h2>Здравствуйте, {{ user.username }}!</h2>
+            <div class="auth-modal-buttons">
+                <a href="/profile" class="auth-button">Личный кабинет</a>
+                <a href="/games/create" class="auth-button">Добавить игру</a>
+                <a href="/logout" class="auth-button">Выйти</a>
+            </div>
+        {% else %}
+            <h2>Добро пожаловать!</h2>
+            <div class="auth-modal-buttons">
+                <a href="/login" class="auth-button">Войти</a>
+                <a href="/register" class="auth-button">Регистрация</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("auth-modal");
+    const userIcon = document.querySelector(".user-icon");
+    const closeButton = document.querySelector(".auth-close-button");
+
+    userIcon.addEventListener("click", () => {
+        modal.style.display = "flex";
+    });
+
+    closeButton.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    window.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+});
+</script>
+{% endblock %}

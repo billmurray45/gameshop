@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}{{ game.title }} - GameShop{% endblock %}
+
+{% block content %}
+<main>
+<div class="container">
+<div class="breadcrumb"><span><a href="/">Главная</a> » {{ game.title }}</span></div>
+{% if user and game.owner_id == user.id %}
+<div class="admin-actions">
+<a href="/games/{{ game.id }}/edit" class="edit-btn"><i class="fas fa-edit"></i> Редактировать</a>
+<form id="deleteForm" action="/games/{{ game.id }}/delete" method="post">
+<button type="button" onclick="showDeleteModal()" class="delete-btn"><i class="fas fa-trash"></i> Удалить</button>
+</form>
+</div>
+{% endif %}
+<section class="game-detail">
+<div class="game-cover"><img src="{{ game.poster }}" alt="{{ game.title }}"></div>
+<div class="game-detail-info">
+<h1>{{ game.title }} <span class="discount-badge">-20%</span></h1>
+<div class="platform-list">
+<div class="platform-item">
+<div class="platform-icon"><i class="fas fa-calendar"></i></div>
+<div class="platform-name">Год<br><strong>{{ game.year }}</strong></div>
+</div>
+<div class="platform-item">
+<div class="platform-icon"><i class="fab fa-xbox"></i></div>
+<div class="platform-name">Платформа<br><strong>{{ game.platform }}</strong></div>
+</div>
+<div class="platform-item">
+<div class="platform-icon"><i class="fa fa-microphone"></i></div>
+<div class="platform-name">Озвучка<br><strong>Английский</strong></div>
+</div>
+<div class="platform-item">
+<div class="platform-icon"><i class="fa fa-comment"></i></div>
+<div class="platform-name">Субтитры<br><strong>Русский</strong></div>
+</div>
+</div>
+
+<div class="price-section">
+<div class="price-container">
+<span class="current-price">{{ game.price }} Р</span>
+</div>
+<form action="/cart" method="post" class="inline-form">
+    <input type="hidden" name="game_id" value="{{ game.id }}">
+    <input type="hidden" name="quantity" value="1">
+    <button type="submit" class="buy-now-btn">Купить сейчас</button>
+</form>
+
+</div>
+
+<div class="features-list">
+<div class="feature-item"><i class="fas fa-check-circle"></i><span>Моментальная доставка</span></div>
+<div class="feature-item"><i class="fas fa-check-circle"></i><span>Кэшбэк до 20%</span></div>
+<div class="feature-item"><i class="fas fa-check-circle"></i><span>Безопасная оплата</span></div>
+</div>
+</div>
+</section>
+
+<section class="game-description">
+<h2>Описание игры {{ game.title }}:</h2>
+{{ game.descr }}
+</section>
+
+<section class="video-container">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Cities: Skylines II - Official Release Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</section>
+
+<section class="reviews-section">
+<div class="reviews-header"><h2>Отзывы ({{ comments|length }})</h2></div>
+<form action="/games/{{ game.id }}/comments" method="post" class="comment-form">
+<textarea id="text" name="text" class="comment-textarea" placeholder="Напишите комментарий" required></textarea>
+<div class="comment-actions"><button type="submit" class="submit-comment">Отправить</button></div>
+</form>
+{% if comments %}
+{% for comment in comments %}
+<div class="comment">
+<div class="comment-header">
+<div class="comment-author">
+<div class="author-avatar"><img src="https://i.pravatar.cc/150?img=12" alt="Admin"></div>
+<div class="author-info">
+<div class="author-name">{{ comment.owner.username }}</div>
+<div class="comment-date">{{ comment.created_at.strftime('%d.%m.%Y %H:%M') }}</div>
+</div>
+</div>
+<div class="comment-actions-dropdown">
+<button class="dropdown-toggle">...</button>
+<div class="actions-dropdown">
+<a href="#" class="dropdown-item">Ответить</a>
+</div>
+</div>
+</div>
+<div class="comment-text"><p>{{ comment.text }}</p></div>
+</div>
+{% endfor %}
+{% endif %}
+</section>
+</div>
+</main>
+
+<div id="deleteModal" class="modal">
+<div class="modal-content">
+<h3 style="margin-bottom: 15px;">Подтверждение удаления</h3>
+<p>Вы действительно хотите удалить игру "{{ game.title }}"? Это действие нельзя отменить.</p>
+<div class="modal-actions">
+<button onclick="hideDeleteModal()" class="modal-btn cancel-btn"><i class="fas fa-times"></i> Отмена</button>
+<button onclick="document.getElementById('deleteForm').submit()" class="modal-btn confirm-btn"><i class="fas fa-check"></i> Удалить</button>
+</div>
+</div>
+</div>
+
+<script>
+                // Функции для работы с модальным окном
+        function showDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'block';
+        }
+
+        function hideDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+        }
+
+        // Закрытие модального окна при клике вне его
+        window.onclick = function(event) {
+            const modal = document.getElementById('deleteModal');
+            if (event.target == modal) {
+                hideDeleteModal();
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Dropdown toggle
+            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const dropdown = toggle.nextElementSibling;
+                    dropdown.classList.toggle('show');
+
+                    // Close other dropdowns
+                    dropdownToggles.forEach(otherToggle => {
+                        if (otherToggle !== toggle) {
+                            otherToggle.nextElementSibling.classList.remove('show');
+                        }
+                    });
+                });
+            });
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.matches('.dropdown-toggle') && !e.target.closest('.actions-dropdown')) {
+                    document.querySelectorAll('.actions-dropdown').forEach(dropdown => {
+                        dropdown.classList.remove('show');
+                    });
+                }
+            });
+
+
+            // Screenshot preview
+            const screenshots = document.querySelectorAll('.screenshot-item');
+
+            screenshots.forEach(screenshot => {
+                screenshot.addEventListener('click', () => {
+                    const imgSrc = screenshot.querySelector('img').src;
+                    // Here you could implement a lightbox to show the full-size image
+                    window.open(imgSrc, '_blank');
+                });
+            });
+        });
+</script>
+{% endblock %}
