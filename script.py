@@ -1,4 +1,3 @@
-# main.py или database_init.py
 from database import engine, Base
 
 from models.users import User
